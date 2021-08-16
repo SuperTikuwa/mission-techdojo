@@ -54,7 +54,7 @@ func UserExists(user model.User) bool {
 	db := gormConnect()
 	defer db.Close()
 
-	checkResult := getUserByName(user.Name)
+	checkResult := GetUserByToken(user.Name)
 
 	if checkResult.Name != "" || checkResult.Token != "" {
 		return true

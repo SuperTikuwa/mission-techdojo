@@ -29,13 +29,6 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isUserExist := dbctl.UserExists(user)
-
-	if isUserExist {
-		http.Error(w, `{"success": false,"message": "User already exists"}`, http.StatusBadRequest)
-		return
-	}
-
 	user.GenerateToken()
 
 	if err := dbctl.InsertNewUser(user); err != nil {
@@ -73,6 +66,13 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token := r.Header[http.CanonicalHeaderKey("x-token")][0]
+
+	if token == "" {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, `{"success": false,"message": "Invalid token"}`, http.StatusBadRequest)
+		return
+	}
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -86,6 +86,12 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.Token = token
+
+	if dbctl.UserExists(user) {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, `{"success": false,"message": "User not found"}`, http.StatusBadRequest)
+		return
+	}
 
 	if err := dbctl.UpdateUser(user); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

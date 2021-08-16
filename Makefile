@@ -57,3 +57,5 @@ migrate/down:
 
 migrate/force:
 	migrate -path ${MIGRATE_FILES} -database ${DB_URI} force ${v}
+
+migrate/updown: migrate/down migrate/up
