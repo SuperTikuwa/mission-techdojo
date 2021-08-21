@@ -10,5 +10,10 @@ func main() {
 	http.HandleFunc("/user/create", handler.CreateHandler)
 	http.HandleFunc("/user/get", handler.GetHandler)
 	http.HandleFunc("/user/update", handler.UpdateHandler)
+
+	http.HandleFunc("/gacha/draw", handler.DrawHandler)
+
+	http.HandleFunc("/character/list", handler.ListHandler)
+
 	http.ListenAndServe(":8080", nil)
 }

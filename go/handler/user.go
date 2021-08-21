@@ -12,8 +12,7 @@ import (
 
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		w.Header().Set("Content-Type", "application/json")
-		http.Error(w, `{"success": false,"message": "Method not allowed"}`, http.StatusBadRequest)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -23,21 +22,23 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user model.User
-	if err := json.Unmarshal(body, &user); err != nil {
+	var createRequest model.UserCreateRequest
+	if err := json.Unmarshal(body, &createRequest); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	user.GenerateToken()
+	var newUser model.User
+	newUser.Name = createRequest.Name
+	newUser.GenerateToken()
 
-	if err := dbctl.InsertNewUser(user); err != nil {
+	if err := dbctl.InsertNewUser(newUser); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintln(w, `{"token":"`+user.Token+`"}`)
+	fmt.Fprintln(w, `{"token":"`+newUser.Token+`"}`)
 }
 
 func GetHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,15 +48,28 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Header[http.CanonicalHeaderKey("x-token")][0]
-	user := dbctl.GetUserByToken(token)
+	token := r.Header.Get("x-token")
+
+	user := dbctl.SelectUserByToken(token)
 	if user.Name == "" {
+		w.Header().Set("Content-Type", "application/json")
 		http.Error(w, `{"success": false,"message": "User not found"}`, http.StatusBadRequest)
 		return
 	}
 
+	var getResponse model.UserGetResponse
+	getResponse.Name = user.Name
+
+	responseJson, err := json.Marshal(getResponse)
+	if err != nil {
+		http.Error(w, `{"success": false,"message": "`+err.Error()+`"}`, http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintln(w, `{"name":"`+user.Name+`"}`)
+
+	fmt.Println(responseJson, getResponse, "hoge")
+	fmt.Fprintln(w, string(responseJson))
 }
 
 func UpdateHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,11 +79,9 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Header[http.CanonicalHeaderKey("x-token")][0]
-
+	token := r.Header.Get("x-token")
 	if token == "" {
-		w.Header().Set("Content-Type", "application/json")
-		http.Error(w, `{"success": false,"message": "Invalid token"}`, http.StatusBadRequest)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -79,19 +91,19 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user model.User
-	if err := json.Unmarshal(body, &user); err != nil {
+	var updateRequest model.UserUpdateRequest
+	if err := json.Unmarshal(body, &updateRequest); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	user.Token = token
-
-	if dbctl.UserExists(user) {
-		w.Header().Set("Content-Type", "application/json")
-		http.Error(w, `{"success": false,"message": "User not found"}`, http.StatusBadRequest)
+	user := dbctl.SelectUserByToken(token)
+	if !dbctl.UserExists(user) {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	user.Name = updateRequest.Name
 
 	if err := dbctl.UpdateUser(user); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

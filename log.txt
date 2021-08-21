@@ -9,3 +9,5 @@
 2021-08-16T17:52:49+09:00 failure|  [record not found]
 2021-08-16T17:53:04+09:00 failure|  [record not found]
 2021-08-16T17:53:26+09:00 failure|  [record not found]
+2021-08-18T17:32:00+09:00 failure|  [Error 1054: Unknown column 'user_id' in 'where clause']
+2021-08-18T17:33:31+09:00 failure|  [Error 1054: Unknown column 'user_id' in 'where clause']

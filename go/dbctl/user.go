@@ -16,19 +16,7 @@ func InsertNewUser(newUser model.User) error {
 	return nil
 }
 
-func getUserByName(userName string) model.User {
-	db := gormConnect()
-	defer db.Close()
-	var user model.User
-	if err := db.Where("name = ?", userName).First(&user).Error; err != nil {
-		writeLog(failure, err)
-		return model.User{}
-	}
-
-	return user
-}
-
-func GetUserByToken(token string) model.User {
+func SelectUserByToken(token string) model.User {
 	db := gormConnect()
 	defer db.Close()
 	var user model.User
@@ -54,7 +42,7 @@ func UserExists(user model.User) bool {
 	db := gormConnect()
 	defer db.Close()
 
-	checkResult := GetUserByToken(user.Name)
+	checkResult := SelectUserByToken(user.Token)
 
 	if checkResult.Name != "" || checkResult.Token != "" {
 		return true

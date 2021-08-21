@@ -5,7 +5,7 @@ GO=todo_backend
 DB=techdojo_db
 DB_URI="mysql://root:my-secret-pw@tcp(127.0.0.1:33061)/techdojo_db"
 MIGRATE_FILES=mysql/migrations
-v=1
+v=
 
 run:
 	cd go && go run main.go
