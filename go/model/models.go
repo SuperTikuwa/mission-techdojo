@@ -6,10 +6,16 @@ import (
 	"time"
 )
 
+// MySQL Model
+
+type Tabler interface {
+	TableName() string
+}
+
 type User struct {
-	ID    int    `json:"id,omitempty"`
-	Name  string `json:"name"`
-	Token string `json:"token,omitempty"`
+	ID    int    `gorm:"id,omitempty"`
+	Name  string `gorm:"name"`
+	Token string `gorm:"token"`
 }
 
 func (u *User) GenerateToken() {
@@ -19,11 +25,58 @@ func (u *User) GenerateToken() {
 }
 
 type Character struct {
-	ID   int    `json:"id"`
+	ID     int    `gorm:"id"`
+	Name   string `gorm:"name"`
+	Weight int    `gorm:"weight"`
+}
+
+type UserAndCharacterLink struct {
+	UserID          int    `gorm:"user_id"`
+	CharacterID     int    `gorm:"character_id"`
+	UserCharacterID string `gorm:"user_character_id"`
+}
+
+func (u UserAndCharacterLink) TableName() string {
+	return "user_and_character_links"
+}
+
+// HTTP Model
+
+type UserCreateRequest struct {
 	Name string `json:"name"`
 }
 
-type LinkUserAndCharacter struct {
-	UserID      int `gorm:"user_id"`
-	CharacterID int `gorm:"character_id"`
+type UserCreateResponse struct {
+	Token string `json:"token"`
+}
+
+type UserGetResponse struct {
+	Name string `json:"name"`
+}
+
+type UserUpdateRequest struct {
+	Name string `json:"name"`
+}
+
+type GachaDrawRequest struct {
+	Times int `json:"times"`
+}
+
+type GachaResult struct {
+	CharacterID string `json:"characterID"`
+	Name        string `json:"name"`
+}
+
+type GachaDrawResponse struct {
+	Results []GachaResult `json:"results"`
+}
+
+type UserCharacter struct {
+	UserCharacterID string `json:"userCharacterID"`
+	CharacterID     string `json:"characterID"`
+	Name            string `json:"name"`
+}
+
+type CharacterListResponse struct {
+	Characters []UserCharacter `json:"characters"`
 }

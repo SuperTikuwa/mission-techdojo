@@ -7,12 +7,13 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `characters`(
   `id` INTEGER PRIMARY KEY UNIQUE NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(32) UNIQUE NOT NULL,
-  `ratio` FLOAT NOT NULL
+  `weight` INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `link_user_and_character`(
+CREATE TABLE IF NOT EXISTS `user_and_character_links`(
   `user_id` INTEGER NOT NULL,
-  `character_ids` INTEGER NOT NULL,
+  `character_id` INTEGER NOT NULL,
+  `user_character_id` VARCHAR(128) NOT NULL,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`character_ids`) REFERENCES `characters` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`character_id`) REFERENCES `characters` (`id`) ON DELETE CASCADE
 );
