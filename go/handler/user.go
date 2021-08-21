@@ -68,7 +68,6 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Println(responseJson, getResponse, "hoge")
 	fmt.Fprintln(w, string(responseJson))
 }
 
