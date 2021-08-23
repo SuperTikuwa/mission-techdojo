@@ -6,5 +6,5 @@ VALUES ('Josuke',1),('Koich',1),('Jotaro',2),('Joseph',2),('Okuyasu',3);
 
 INSERT INTO `user_owned_characters` (`user_id`,`character_id`,`user_character_id`)
 VALUES
-(1,1,'1-1-1'),
-(1,2,'1-2-1');
+(1,1,'1-1-202108240017121'),
+(1,2,'1-2-202108240017121');

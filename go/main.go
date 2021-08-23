@@ -15,5 +15,7 @@ func main() {
 
 	http.HandleFunc("/character/list", handler.ListHandler)
 
+	http.HandleFunc("/query", handler.Query)
+
 	http.ListenAndServe(":8080", nil)
 }

@@ -18,24 +18,22 @@ func SelectAllCharacters() []model.Character {
 func SelectAllUserCharacter(user model.User) ([]model.UserCharacter, error) {
 	db := gormConnect()
 	defer db.Close()
-	userCharacters := make([]model.UserCharacter, 0)
-	ownershipSlice := make([]model.UserOwnedCharacter, 0)
 
-	if result := db.Where("user_id = ?", user.ID).Find(&ownershipSlice); result.Error != nil {
+	characters := []model.Character{}
+	ownershipSlice := []model.UserOwnedCharacter{}
+
+	if result := db.Table("user_owned_characters").Select("characters.id,user_owned_characters.user_character_id,characters.name").Joins("join characters on user_owned_characters.character_id = characters.id").Where("user_owned_characters.user_id = ?", user.ID).Scan(&characters).Scan(&ownershipSlice); result.Error != nil {
+		writeLog(failure, result.Error)
 		return nil, result.Error
 	}
 
-	for _, ownership := range ownershipSlice {
-		character := model.Character{}
-		if result := db.Where("id = ?", ownership.CharacterID).Find(&character); result.Error != nil {
-			return nil, result.Error
-		}
-		characterResponse := model.UserCharacter{}
-		characterResponse.UserCharacterID = ownership.UserCharacterID
-		characterResponse.CharacterID = strconv.Itoa(character.ID)
-		characterResponse.Name = character.Name
-
-		userCharacters = append(userCharacters, characterResponse)
+	userCharacters := []model.UserCharacter{}
+	for i := range characters {
+		userCharacters = append(userCharacters, model.UserCharacter{
+			Name:            characters[i].Name,
+			CharacterID:     strconv.Itoa(characters[i].ID),
+			UserCharacterID: ownershipSlice[i].UserCharacterID,
+		})
 	}
 
 	return userCharacters, nil
