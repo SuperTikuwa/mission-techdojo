@@ -19,19 +19,19 @@ func SelectAllUserCharacter(user model.User) ([]model.UserCharacter, error) {
 	db := gormConnect()
 	defer db.Close()
 	userCharacters := make([]model.UserCharacter, 0)
-	links := make([]model.UserAndCharacterLink, 0)
+	ownershipSlice := make([]model.UserOwnedCharacter, 0)
 
-	if result := db.Where("user_id = ?", user.ID).Find(&links); result.Error != nil {
+	if result := db.Where("user_id = ?", user.ID).Find(&ownershipSlice); result.Error != nil {
 		return nil, result.Error
 	}
 
-	for _, link := range links {
+	for _, ownership := range ownershipSlice {
 		character := model.Character{}
-		if result := db.Where("id = ?", link.CharacterID).Find(&character); result.Error != nil {
+		if result := db.Where("id = ?", ownership.CharacterID).Find(&character); result.Error != nil {
 			return nil, result.Error
 		}
 		characterResponse := model.UserCharacter{}
-		characterResponse.UserCharacterID = link.UserCharacterID
+		characterResponse.UserCharacterID = ownership.UserCharacterID
 		characterResponse.CharacterID = strconv.Itoa(character.ID)
 		characterResponse.Name = character.Name
 

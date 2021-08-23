@@ -30,14 +30,14 @@ type Character struct {
 	Weight int    `gorm:"weight"`
 }
 
-type UserAndCharacterLink struct {
+type UserOwnedCharacter struct {
 	UserID          int    `gorm:"user_id"`
 	CharacterID     int    `gorm:"character_id"`
 	UserCharacterID string `gorm:"user_character_id"`
 }
 
-func (u UserAndCharacterLink) TableName() string {
-	return "user_and_character_links"
+func (u UserOwnedCharacter) TableName() string {
+	return "user_owned_characters"
 }
 
 // HTTP Model

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `characters`(
   `weight` INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `user_and_character_links`(
+CREATE TABLE IF NOT EXISTS `user_owned_characters`(
   `user_id` INTEGER NOT NULL,
   `character_id` INTEGER NOT NULL,
   `user_character_id` VARCHAR(128) NOT NULL,

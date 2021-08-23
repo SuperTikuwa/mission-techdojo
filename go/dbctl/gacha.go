@@ -62,7 +62,6 @@ func insertGachaResults(results []model.GachaResult, user model.User) error {
 	db := gormConnect()
 	defer db.Close()
 
-	// links := make([]model.UserAndCharacterLink, 0)
 	for _, result := range results {
 		idStr := strings.Split(result.CharacterID, "-")[1]
 		characterID, err := strconv.Atoi(idStr)
@@ -70,13 +69,13 @@ func insertGachaResults(results []model.GachaResult, user model.User) error {
 			return err
 		}
 
-		link := model.UserAndCharacterLink{
+		ownership := model.UserOwnedCharacter{
 			UserID:          user.ID,
 			CharacterID:     characterID,
 			UserCharacterID: result.CharacterID,
 		}
 
-		if result := db.Create(&link); result.Error != nil {
+		if result := db.Create(&ownership); result.Error != nil {
 			return result.Error
 		}
 	}
