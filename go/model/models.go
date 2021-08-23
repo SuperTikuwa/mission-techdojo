@@ -36,9 +36,9 @@ type UserOwnedCharacter struct {
 	UserCharacterID string `gorm:"user_character_id"`
 }
 
-func (u UserOwnedCharacter) TableName() string {
-	return "user_owned_characters"
-}
+// func (u UserOwnedCharacter) TableName() string {
+// 	return "user_owned_characters"
+// }
 
 // HTTP Model
 

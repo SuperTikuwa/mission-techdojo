@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/SuperTikuwa/mission-techdojo/model"
+	gormbulk "github.com/t-tiger/gorm-bulk-insert/v2"
 )
 
 func init() {
@@ -62,6 +63,8 @@ func insertGachaResults(results []model.GachaResult, user model.User) error {
 	db := gormConnect()
 	defer db.Close()
 
+	ownershipInterfaces := make([]interface{}, 0, len(results))
+
 	for _, result := range results {
 		idStr := strings.Split(result.CharacterID, "-")[1]
 		characterID, err := strconv.Atoi(idStr)
@@ -75,9 +78,12 @@ func insertGachaResults(results []model.GachaResult, user model.User) error {
 			UserCharacterID: result.CharacterID,
 		}
 
-		if result := db.Create(&ownership); result.Error != nil {
-			return result.Error
-		}
+		ownershipInterfaces = append(ownershipInterfaces, ownership)
+	}
+
+	if err := gormbulk.BulkInsert(db, ownershipInterfaces, 3000); err != nil {
+		writeLog(failure, "insertGachaResults", err)
+		return err
 	}
 
 	return nil

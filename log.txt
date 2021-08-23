@@ -11,3 +11,5 @@
 2021-08-16T17:53:26+09:00 failure|  [record not found]
 2021-08-18T17:32:00+09:00 failure|  [Error 1054: Unknown column 'user_id' in 'where clause']
 2021-08-18T17:33:31+09:00 failure|  [Error 1054: Unknown column 'user_id' in 'where clause']
+2021-08-23T23:52:10+09:00 failure|  [Error 1146: Table 'techdojo_db.users' doesn't exist]
+2021-08-23T23:52:16+09:00 failure|  [Error 1146: Table 'techdojo_db.users' doesn't exist]
