@@ -66,7 +66,8 @@ type UserUpdateRequest struct {
 }
 
 type GachaDrawRequest struct {
-	Times int `json:"times"`
+	Times   int `json:"times"`
+	GachaID int `json:"gacha_id"`
 }
 
 type GachaResult struct {

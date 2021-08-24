@@ -23,7 +23,6 @@ func DrawHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := dbctl.SelectUserByToken(token)
-
 	if !dbctl.UserExists(user) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -41,7 +40,7 @@ func DrawHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	results, err := dbctl.DrawGacha(user.Token, drawRequest.Times)
+	results, err := dbctl.DrawGacha(user, drawRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

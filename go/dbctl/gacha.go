@@ -15,11 +15,7 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-func DrawGacha(token string, times int) (model.GachaDrawResponse, error) {
-	user := SelectUserByToken(token)
-	if user.Token != token {
-		return model.GachaDrawResponse{}, errors.New("invalid token")
-	}
+func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.GachaDrawResponse, error) {
 
 	characters := SelectAllCharacters()
 	if len(characters) == 0 {
@@ -28,7 +24,7 @@ func DrawGacha(token string, times int) (model.GachaDrawResponse, error) {
 
 	lookupTable := createLookupTable(characters)
 
-	resultIDs := lotteryGacha(lookupTable, times)
+	resultIDs := lotteryGacha(lookupTable, gachaParams.Times)
 
 	results := extractResultsFromIDs(characters, resultIDs, user)
 	if err := insertGachaResults(results, user); err != nil {

@@ -84,6 +84,12 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := dbctl.SelectUserByToken(token)
+	if !dbctl.UserExists(user) {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -93,12 +99,6 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 	var updateRequest model.UserUpdateRequest
 	if err := json.Unmarshal(body, &updateRequest); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	user := dbctl.SelectUserByToken(token)
-	if !dbctl.UserExists(user) {
-		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
