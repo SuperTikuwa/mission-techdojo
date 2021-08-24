@@ -36,9 +36,16 @@ type UserOwnedCharacter struct {
 	UserCharacterID string `gorm:"user_character_id"`
 }
 
-// func (u UserOwnedCharacter) TableName() string {
-// 	return "user_owned_characters"
-// }
+type Gacha struct {
+	ID   int    `gorm:"id"`
+	Name string `gorm:"name"`
+}
+
+type GachaEmissions struct {
+	GachaID     int `gorm:"gacha_id"`
+	CharacterID int `gorm:"character_id"`
+	Weight      int `gorm:"weight"`
+}
 
 // HTTP Model
 
