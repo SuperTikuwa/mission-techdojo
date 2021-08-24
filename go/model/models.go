@@ -21,9 +21,8 @@ func (u *User) GenerateToken() {
 }
 
 type Character struct {
-	ID     int    `gorm:"id"`
-	Name   string `gorm:"name"`
-	Weight int    `gorm:"weight"`
+	ID   int    `gorm:"id"`
+	Name string `gorm:"name"`
 }
 
 type UserOwnedCharacter struct {
@@ -37,10 +36,10 @@ type Gacha struct {
 	Name string `gorm:"name"`
 }
 
-type GachaEmissions struct {
-	GachaID     int `gorm:"gacha_id"`
-	CharacterID int `gorm:"character_id"`
-	Weight      int `gorm:"weight"`
+type GachaEmission struct {
+	GachaID        int `gorm:"gacha_id"`
+	CharacterID    int `gorm:"character_id"`
+	EmissionWeight int `gorm:"emission_weight"`
 }
 
 // HTTP Model
