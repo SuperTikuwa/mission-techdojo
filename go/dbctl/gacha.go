@@ -37,6 +37,12 @@ func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.Gacha
 	return drawResponse, nil
 }
 
+func selectCharactersByGachaID(gachaID int) []model.Character {
+	db := gormConnect()
+	defer db.Close()
+
+}
+
 func lotteryGacha(table []int, times int) []int {
 	results := make([]int, 0)
 	for i := 0; i < times; i++ {
