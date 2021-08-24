@@ -17,7 +17,7 @@ func init() {
 
 func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.GachaDrawResponse, error) {
 
-	characters := SelectAllCharacters()
+	characters := selectAllCharacters()
 	if len(characters) == 0 {
 		return model.GachaDrawResponse{}, errors.New("no characters")
 	}

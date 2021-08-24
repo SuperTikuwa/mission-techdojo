@@ -8,10 +8,6 @@ import (
 
 // MySQL Model
 
-type Tabler interface {
-	TableName() string
-}
-
 type User struct {
 	ID    int    `gorm:"id,omitempty"`
 	Name  string `gorm:"name"`

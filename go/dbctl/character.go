@@ -6,7 +6,7 @@ import (
 	"github.com/SuperTikuwa/mission-techdojo/model"
 )
 
-func SelectAllCharacters() []model.Character {
+func selectAllCharacters() []model.Character {
 	db := gormConnect()
 	defer db.Close()
 	characters := make([]model.Character, 0)
