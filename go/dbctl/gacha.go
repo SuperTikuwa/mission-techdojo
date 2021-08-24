@@ -17,7 +17,19 @@ func init() {
 
 func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.GachaDrawResponse, error) {
 
-	characters := selectAllCharacters()
+	characters := make([]model.Character, 0)
+	var err error
+	if gachaParams.GachaID == 0 {
+		characters, err = selectAllCharacters()
+	} else {
+		characters, err = selectCharactersByGachaID(gachaParams.GachaID)
+	}
+
+	if err != nil {
+		writeLog(failure, "DrawGacha", err)
+		return model.GachaDrawResponse{}, err
+	}
+
 	if len(characters) == 0 {
 		return model.GachaDrawResponse{}, errors.New("no characters")
 	}
@@ -37,10 +49,28 @@ func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.Gacha
 	return drawResponse, nil
 }
 
-func selectCharactersByGachaID(gachaID int) []model.Character {
+func selectAllCharacters() ([]model.Character, error) {
+	db := gormConnect()
+	defer db.Close()
+	characters := make([]model.Character, 0)
+	if result := db.Table("character_emissions").Select("characters.id,characters.name,emission_weight").Joins("JOIN characters ON character_emissions.character_id = characters.id").Scan(&characters); result.Error != nil {
+		writeLog(failure, result.Error)
+		return nil, result.Error
+	}
+
+	return characters, nil
+}
+
+func selectCharactersByGachaID(gachaID int) ([]model.Character, error) {
 	db := gormConnect()
 	defer db.Close()
 
+	characters := make([]model.Character, 0)
+	if result := db.Table("character_emissions").Select("characters.id,characters.name,emission_weight").Joins("JOIN characters ON character_emissions.character_id = characters.id").Where("character_emissions.gacha_id = ?", gachaID).Scan(&characters); result.Error != nil {
+		writeLog(failure, "selectCharactersByGachaID", result.Error)
+		return nil, result.Error
+	}
+	return characters, nil
 }
 
 func lotteryGacha(table []int, times int) []int {
@@ -54,7 +84,7 @@ func lotteryGacha(table []int, times int) []int {
 func createLookupTable(characters []model.Character) []int {
 	lookupTable := make([]int, 0)
 	for _, c := range characters {
-		for i := 0; c.Weight > i; i++ {
+		for i := 0; c.EmissionWeight > i; i++ {
 			lookupTable = append(lookupTable, c.ID)
 		}
 	}

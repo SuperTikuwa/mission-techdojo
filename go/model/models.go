@@ -21,8 +21,9 @@ func (u *User) GenerateToken() {
 }
 
 type Character struct {
-	ID   int    `gorm:"id"`
-	Name string `gorm:"name"`
+	ID             int    `gorm:"id"`
+	Name           string `gorm:"name"`
+	EmissionWeight int    `gorm:"emission_weight;->"`
 }
 
 type UserOwnedCharacter struct {
@@ -62,7 +63,7 @@ type UserUpdateRequest struct {
 
 type GachaDrawRequest struct {
 	Times   int `json:"times"`
-	GachaID int `json:"gacha_id"`
+	GachaID int `json:"gachaID"`
 }
 
 type GachaResult struct {
