@@ -13,3 +13,7 @@
 2021-08-18T17:33:31+09:00 failure|  [Error 1054: Unknown column 'user_id' in 'where clause']
 2021-08-23T23:52:10+09:00 failure|  [Error 1146: Table 'techdojo_db.users' doesn't exist]
 2021-08-23T23:52:16+09:00 failure|  [Error 1146: Table 'techdojo_db.users' doesn't exist]
+2021-08-25T03:00:07+09:00 failure|  [GachaExists Error 1146: Table 'techdojo_db.gacha' doesn't exist]
+2021-08-25T03:04:37+09:00 failure|  [GachaExists Error 1146: Table 'techdojo_db.gacha' doesn't exist]
+2021-08-25T03:04:45+09:00 failure|  [GachaExists Error 1146: Table 'techdojo_db.gacha' doesn't exist]
+2021-08-25T03:04:49+09:00 failure|  [GachaExists Error 1146: Table 'techdojo_db.gacha' doesn't exist]

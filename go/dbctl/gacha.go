@@ -2,6 +2,7 @@ package dbctl
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -17,7 +18,7 @@ func init() {
 
 func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.GachaDrawResponse, error) {
 
-	characters := make([]model.Character, 0)
+	var characters []model.Character
 	var err error
 	if gachaParams.GachaID == 0 {
 		characters, err = selectAllCharacters()
@@ -47,6 +48,20 @@ func DrawGacha(user model.User, gachaParams model.GachaDrawRequest) (model.Gacha
 		Results: results,
 	}
 	return drawResponse, nil
+}
+
+func GachaExists(gachaID int) bool {
+	db := gormConnect()
+	defer db.Close()
+	gachas := make([]model.Gacha, 0)
+	if result := db.Table("gachas").Where("id = ?", gachaID).Find(&gachas); result.Error != nil {
+		writeLog(failure, "GachaExists", result.Error)
+		return false
+	}
+
+	fmt.Println(gachas)
+
+	return len(gachas) > 0
 }
 
 func selectAllCharacters() ([]model.Character, error) {

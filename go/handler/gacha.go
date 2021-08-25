@@ -40,6 +40,12 @@ func DrawHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !dbctl.GachaExists(drawRequest.GachaID) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintf(w, `{"success": false,"message":"gacha not found"}`)
+		return
+	}
+
 	results, err := dbctl.DrawGacha(user, drawRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
