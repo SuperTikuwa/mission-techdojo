@@ -84,3 +84,18 @@ type UserCharacter struct {
 type CharacterListResponse struct {
 	Characters []UserCharacter `json:"characters"`
 }
+
+type EmissionRateRequest struct {
+	GachaID int `json:"gachaID"`
+}
+
+type EmissionRateCharacter struct {
+	ID           int     `json:"ID"`
+	Name         string  `json:"name"`
+	EmissionRate float32 `json:"emissionRate"`
+}
+
+type EmissionRateResponse struct {
+	GachaID    int                     `json:"gachaID"`
+	Characters []EmissionRateCharacter `json:"characters"`
+}

@@ -15,6 +15,8 @@ func main() {
 
 	http.HandleFunc("/character/list", handler.ListHandler)
 
+	http.HandleFunc("/emission/rate", handler.EmissionRateHandler)
+
 	// http.HandleFunc("/query", handler.Query)
 
 	http.ListenAndServe(":8080", nil)

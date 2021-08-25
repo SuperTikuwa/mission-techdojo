@@ -2,7 +2,6 @@ package dbctl
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -58,9 +57,6 @@ func GachaExists(gachaID int) bool {
 		writeLog(failure, "GachaExists", result.Error)
 		return false
 	}
-
-	fmt.Println(gachas)
-
 	return len(gachas) > 0
 }
 
